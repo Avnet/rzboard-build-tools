@@ -2,7 +2,7 @@
 
 ARM_GCC_VERSION=8.3
 if [ "${ARM_GCC_VERSION}" == "SDK" ] ; then
-source /opt/poky/3.1.14/environment-setup-aarch64-poky-linux
+source /opt/poky/3.1.17/environment-setup-aarch64-poky-linux
 else
 ## gcc 8.3 default
 TOOLCHAIN_PATH=$HOME/toolchain/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu/bin
@@ -14,8 +14,8 @@ fi
 UBOOT_GIT_URL="https://github.com/Avnet/renesas-u-boot.git"
 TFA_GIT_URL="https://github.com/Avnet/trusted-firmware-a.git"
 
-UBOOT_BRANCH="rzboard_v2l_v2021.10"
-TFA_BRANCH="rzboard_v2.6_rz"
+UBOOT_BRANCH="rzboard_v2l_v2021.10_r2"
+TFA_BRANCH="rzboard_v2.7_rz"
 
 
 #===============MAIN BODY NO NEED TO CHANGE=========================
@@ -101,7 +101,7 @@ mk_getcode()
 	if [ ! -d bootparameter ];then
 		mkdir bootparameter
 		cd bootparameter
-		wget https://raw.githubusercontent.com/renesas-rz/meta-rzg2/dunfell/rzg2l/recipes-bsp/firmware-pack/bootparameter/bootparameter.c
+		wget https://raw.githubusercontent.com/renesas-rz/meta-renesas/dunfell/rz/recipes-rzg2l/recipes-bsp/firmware-pack/bootparameter/bootparameter.c
 	fi
 	cd ${WORKPWD}/
 }
