@@ -2,7 +2,7 @@
 
 ARM_GCC_VERSION=8.3
 if [ "${ARM_GCC_VERSION}" == "SDK" ] ; then
-source /opt/poky/3.1.17/environment-setup-aarch64-poky-linux
+source /opt/poky/3.1.21/environment-setup-aarch64-poky-linux
 else
 ## gcc 8.3 default
 TOOLCHAIN_PATH=$HOME/toolchain/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu/bin
@@ -101,7 +101,7 @@ mk_getcode()
 	if [ ! -d bootparameter ];then
 		mkdir bootparameter
 		cd bootparameter
-		wget https://raw.githubusercontent.com/renesas-rz/meta-renesas/dunfell/rz/recipes-rzg2l/recipes-bsp/firmware-pack/bootparameter/bootparameter.c
+		wget https://raw.githubusercontent.com/renesas-rz/meta-renesas/dunfell/rz/meta-rzg2l/recipes-bsp/firmware-pack/bootparameter/bootparameter.c
 	fi
 	cd ${WORKPWD}/
 }
