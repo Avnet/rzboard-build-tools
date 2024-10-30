@@ -1,21 +1,21 @@
 #!/bin/bash
 
-ARM_GCC_VERSION=8.3
+ARM_GCC_VERSION=10.3
 if [ "${ARM_GCC_VERSION}" == "SDK" ] ; then
-source /opt/poky/3.1.21/environment-setup-aarch64-poky-linux
+source /opt/poky/3.1.31/environment-setup-aarch64-poky-linux
 else
-## gcc 8.3 default
-TOOLCHAIN_PATH=$HOME/toolchain/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu/bin
+## gcc 10.3 default
+TOOLCHAIN_PATH=$HOME/toolchain/gcc-arm-10.3-2021.07-x86_64-aarch64-none-linux-gnu/bin
 export PATH=$TOOLCHAIN_PATH:$PATH
 export ARCH=arm64
-export CROSS_COMPILE=aarch64-linux-gnu-
+export CROSS_COMPILE=aarch64-none-linux-gnu-
 fi
 
 UBOOT_GIT_URL="https://github.com/Avnet/renesas-u-boot.git"
 TFA_GIT_URL="https://github.com/Avnet/trusted-firmware-a.git"
 
-UBOOT_BRANCH="rzboard_v2l_v2021.10_r2"
-TFA_BRANCH="rzboard_v2.7_rz"
+UBOOT_BRANCH="rzboard_v2l_v2021.10_r3"
+TFA_BRANCH="rzboard_v2.9_rz"
 
 
 #===============MAIN BODY NO NEED TO CHANGE=========================
@@ -89,19 +89,24 @@ mk_clean()
 mk_getcode()
 {
     cd ${WORKPWD}/
+
 	#download uboot
-	git clone $UBOOT_GIT_URL ${UBOOT_DIR}
-	git -C ${UBOOT_DIR} checkout ${UBOOT_BRANCH}
+	if [ ! -d {UBOOT_DIR} ];then
+	    git clone $UBOOT_GIT_URL ${UBOOT_DIR}
+	    git -C ${UBOOT_DIR} checkout ${UBOOT_BRANCH}
+	fi
 
 	#download trusted-firmware-a
-	git clone $TFA_GIT_URL ${TFA_DIR}
-	git -C ${TFA_DIR} checkout ${TFA_BRANCH}
-	
+	if [ ! -d {TFA_GIT_URL} ];then
+	    git clone $TFA_GIT_URL ${TFA_DIR}
+	    git -C ${TFA_DIR} checkout ${TFA_BRANCH}
+	fi
+
     #download extra tool code
 	if [ ! -d bootparameter ];then
 		mkdir bootparameter
 		cd bootparameter
-		wget https://raw.githubusercontent.com/renesas-rz/meta-renesas/dunfell/rz/meta-rzg2l/recipes-bsp/firmware-pack/bootparameter/bootparameter.c
+		wget https://raw.githubusercontent.com/renesas-rz/meta-rzg2/dunfell/rzg2l/recipes-bsp/firmware-pack/bootparameter/bootparameter.c
 	fi
 	cd ${WORKPWD}/
 }
@@ -170,7 +175,7 @@ mk_bootimage()
 function main_process(){
 	SOC_TYPE="rzv2l"
 	WORKPWD=$(pwd)
-	UBOOT_DIR="uboot"
+	UBOOT_DIR="renesas-u-boot"
 	TFA_DIR="trusted-firmware-a"
 
     [ $# -eq 0 ] && help && exit
@@ -181,6 +186,7 @@ function main_process(){
 			-cl*)  mk_clean ; exit ;;
 			-g)    mk_getcode ; exit ;;
 			-rz) SOC_TYPE="rzboard"; echo ${SOC_TYPE};;
+			-v2l) SOC_TYPE="rzv2l"; echo ${SOC_TYPE};;
 			*)  log_error "-- invalid option -- "; help; exit;;
 		esac
 		shift
